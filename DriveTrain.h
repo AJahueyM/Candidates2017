@@ -1,3 +1,6 @@
+#ifndef __DRIVETRAIN_H_
+#define __DRIVETRAIN_H_
+
 #include "Arduino.h"
 #include "Utils.h"
 
@@ -14,4 +17,4 @@ public:
   void setRightMotors(double input);
   void driveStraight(double input);
 };
-
+#endif
