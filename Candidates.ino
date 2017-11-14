@@ -1,17 +1,39 @@
+#include <ShiftRegister74HC595.h>
+
 #include "DriveTrain.h"
+#include "LedSpoiler.h"
+#include "ColorSensor.h"
 
-const int motor2_1 = 6;
-const int motor2_2 = 5;
-const int motor1_1 = 11;
-const int motor1_2 = 10;
+/************************************
+*Codigo Express para Candidates 2017*
+************************************/
 
-DriveTrain driveTrain(motor1_1, motor1_2, motor2_1, motor2_2);
+
+
+int serialDataPin = 8; // DS
+int clockPin = 9; // SHCP
+int latchPin = 12; // STCP
+int chipQuantity =  1;
+
+
+ShiftRegister74HC595 sr (chipQuantity, serialDataPin, clockPin, latchPin);
+LedSpoiler spoilerLed(sr); // This is bad :c
+ColorSensor colorSensor(sr);
+DriveTrain driveTrain;
+
 
 void setup() {
-  Serial.begin(9600);
+  driveTrain.driveStraight(0);
 }
 
 void loop() {
-  driveTrain.driveStraight(0);        
-
+  Color color = colorSensor.getColor();
+  if(color == Color::Red){
+    spoilerLed.setRed();
+  }else if(color == Color::Blue){
+    spoilerLed.setBlue();
+  }else{
+    spoilerLed.setOff();
+  }
+  
 }

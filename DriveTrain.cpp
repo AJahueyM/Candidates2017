@@ -1,15 +1,10 @@
 #include "DriveTrain.h"
 
-DriveTrain::DriveTrain(int motorA_1, int motorA_2, int motorB_1, int motorB_2){
+DriveTrain::DriveTrain(){
    pinMode(motorA_1, OUTPUT);
    pinMode(motorA_2, OUTPUT);
    pinMode(motorB_1, OUTPUT);
    pinMode(motorB_2, OUTPUT);
-  
-   this->motorA_1 = motorA_1;
-   this->motorA_2 = motorA_2;
-   this->motorB_1 = motorB_1;
-   this->motorB_2 = motorB_2;
 }
 
 void DriveTrain::setLeftMotors(double input){
