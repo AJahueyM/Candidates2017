@@ -1,6 +1,6 @@
 #include "ColorSensor.h"
 
-ColorSensor::ColorSensor(ShiftRegister74HC595& sr) : sr(sr){
+ColorSensor::ColorSensor(){
   sr.set(S0, HIGH); 
   sr.set(S1, LOW);
   pinMode(sensorOut, INPUT);

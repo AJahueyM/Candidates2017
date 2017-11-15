@@ -1,6 +1,6 @@
 #include "LedSpoiler.h"
 
-LedSpoiler::LedSpoiler(ShiftRegister74HC595& sr): sr(sr){
+LedSpoiler::LedSpoiler(){
   
 }
 
