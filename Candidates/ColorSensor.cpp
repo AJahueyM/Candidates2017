@@ -38,27 +38,27 @@ Color ColorSensor::getColor(){
   if(blueFrequency < 1){
      blueFrequency = 1;
   }
-   Serial.print("R= ");
-  Serial.print(redFrequency);
-  Serial.print(" G= ");
-  Serial.print(greenFrequency);
-  Serial.print(" B= ");
-  Serial.println(blueFrequency);
+//   Serial.print("R= ");
+//  Serial.print(redFrequency);
+//  Serial.print(" G= ");
+//  Serial.print(greenFrequency);
+//  Serial.print(" B= ");
+//  Serial.println(blueFrequency);
 
   if((withinRange(redFrequency, 283)&& withinRange(greenFrequency, 156))&& withinRange(blueFrequency, 233)){
-      Serial.print("PINK");
+     // Serial.print("PINK");
       return Color::Pink;
   }else if((withinRange(redFrequency, 285)&& withinRange(greenFrequency, 215))&& withinRange(blueFrequency, 170)){
-      Serial.print("ORANGE");
+      //Serial.print("ORANGE");
       return Color::Orange;
   }else if((withinRange(redFrequency, 261)&& withinRange(greenFrequency, 253))&& withinRange(blueFrequency, 190)){
-      Serial.print("YELLOW");
+     // Serial.print("YELLOW");
       return Color::Yellow;
   }else if(redFrequency > blueFrequency){
-      Serial.print("RED");
+     // Serial.print("RED");
       return Color::Red;
   }else if(blueFrequency > redFrequency){
-      Serial.print("BLUE");
+     // Serial.print("BLUE");
       return Color::Blue;
   }else{
       return Color::None;
