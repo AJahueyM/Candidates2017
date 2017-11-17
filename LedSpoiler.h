@@ -1,19 +1,16 @@
 #ifndef __SPOILER_H_
 #define __SPOILER_H_
 #include "Arduino.h"
-#include "SR_74HC595.h"
-/**********************
-* pls 4give this class*
-***********************/
+#include <ShiftRegister74HC595.h>
 
 class LedSpoiler{
 private:
-  SR_74HC595& sr = SR_74HC595::getInstance();
+  ShiftRegister74HC595& sr;
   
   int redPin = 5;
   int bluePin = 6;
 public:
-  LedSpoiler();
+  LedSpoiler(ShiftRegister74HC595& sr);
   void setRed();
   void setBlue();
   void setOff();

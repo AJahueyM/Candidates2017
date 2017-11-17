@@ -4,6 +4,7 @@
 
 #include <ShiftRegister74HC595.h>
 #include "Arduino.h"
+
 class SR_74HC595 : public ShiftRegister74HC595{
 
 private:
@@ -11,6 +12,7 @@ private:
   int serialDataPin = 8;
   int clockPin = 9;
   int latchPin = 12;
+
   SR_74HC595();
   SR_74HC595(const SR_74HC595 &);
   SR_74HC595 &operator=(const SR_74HC595 &);
