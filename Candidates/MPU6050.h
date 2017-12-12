@@ -252,3 +252,4 @@ class MPU6050
 };
 
 #endif
+

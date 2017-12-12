@@ -3,3 +3,4 @@ SR_74HC595::SR_74HC595() : ShiftRegister74HC595(chipQuantity,serialDataPin,clock
     Serial.println("HI");
     setAllHigh();
 }
+

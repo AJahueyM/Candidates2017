@@ -6,3 +6,4 @@ double modifiedMap(double x, double in_min, double in_max, double out_min, doubl
  return (double) temp/4;
 }
 
+

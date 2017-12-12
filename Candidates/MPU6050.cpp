@@ -743,3 +743,4 @@ void MPU6050::writeRegisterBit(uint8_t reg, uint8_t pos, bool state)
 
     writeRegister8(reg, value);
 }
+

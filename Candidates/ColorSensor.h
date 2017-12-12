@@ -12,18 +12,20 @@ enum Color {
   Blue,
   White,
   Black,
+  Green,
   None
 };
 class ColorSensor{
 private:
   ShiftRegister74HC595& sr;
   int redFrequency = 0, blueFrequency = 0 , greenFrequency = 0;
-  double range = .1;
+  double range = .2;
   const int S0 = 2;
   const int S1 =  1;
   const int  S2 = 3;
   const int  S3 = 4;
   const int sensorOut =  3;
+  bool calibrar = false;
   bool withinRange(int input, int value);
 
 public:
@@ -33,3 +35,4 @@ public:
 };
 
 #endif
+

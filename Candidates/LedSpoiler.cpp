@@ -18,3 +18,4 @@ void LedSpoiler::setOff(){
   sr.set(redPin, HIGH);
   sr.set(bluePin, HIGH);
 }
+

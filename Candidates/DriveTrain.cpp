@@ -5,13 +5,18 @@ DriveTrain::DriveTrain(){
    pinMode(motorA_2, OUTPUT);
    pinMode(motorB_1, OUTPUT);
    pinMode(motorB_2, OUTPUT);
-
-     // Initialize MPU6050
+   
+  Serial.println("Initialize MPU6050");
   while(!mpu.begin(MPU6050_SCALE_2000DPS, MPU6050_RANGE_2G))
   {
     Serial.println("Could not find a valid MPU6050 sensor, check wiring!");
     delay(500);
   }
+  
+  // If you want, you can set gyroscope offsets
+  // mpu.setGyroOffsetX(155);
+  // mpu.setGyroOffsetY(15);
+  // mpu.setGyroOffsetZ(15);
   
   // Calibrate gyroscope. The calibration must be at rest.
   // If you don't want calibrate, comment this line.
@@ -29,10 +34,11 @@ void DriveTrain::update(){
   Vector norm = mpu.readNormalizeGyro();
 
   // Calculate Pitch, Roll and Yaw
+
   yaw = yaw + norm.ZAxis * timeStep;
+
   // Wait to full timeStep period
   delay((timeStep*1000) - (millis() - timer));
-
 }
 void DriveTrain::setLeftMotors(double input){
    if(input > 0.0){
@@ -66,26 +72,85 @@ void DriveTrain::setRightMotors(double input){
    analogWrite(motorB_2, motorB_2Output);
    analogWrite(motorB_1, motorB_1Output);
 }
-
+void DriveTrain::stop(){
+    setRightMotors(0);
+    setLeftMotors(0);
+}
+void DriveTrain::driveTimed(double input, int ms){
+ int startTime = millis();
+  while(millis() - startTime < ms){
+     setRightMotors(input);
+     setLeftMotors(input);
+  
+  }
+  stop();
+}
+void DriveTrain::drive(double input){
+     setRightMotors(input);
+     setLeftMotors(input);
+}
 void DriveTrain::driveStraight(double input, int initAngle){
   update();
   double error = initAngle - getYaw();
-  double mul = (error / 25.0) * 7.0;
+  double mul = error /(abs(getYaw() + 1));
     if(mul > 1.0){
       mul = 1.0;
     }else if(mul < -1.0){
       mul = -1.0;
     }
+
   if(input >0){
    setRightMotors(input * (1.0 - mul));
    setLeftMotors(input * (1.0 + mul));
+
   }else{
    setRightMotors(input * (1.0 + mul));
-   setLeftMotors(input * (1.0 - mul));   
+   setLeftMotors(input * (1.0 - mul)); 
+
   }
 }
+void DriveTrain::driveStraightTimed(double input, int initAngle, int ms){
+  int startTime = millis();
+  while(millis() - startTime < ms){
+    driveStraight(input, initAngle);
+  }
+  stop();
+}
+void DriveTrain::driveStraightDistance(double input, int initAngle, int distance, HC_SR04& sensor ){
+      double distanceSensor = sensor.getDistance();
+      double errorDistance = distanceSensor -distance;
+      while(abs(errorDistance) != 0){
+       distanceSensor = sensor.getDistance();
+       errorDistance = distanceSensor - distance;
+       driveStraight(errorDistance / 10.0, initAngle);
+       delay(16);
+      }
+      stop();
+}
+void DriveTrain::resetAngle(){
+  angDifference = -yaw;
+}
 int DriveTrain::getYaw(){
-  return -yaw;
+  update();
+  int baseAngle = -yaw - angDifference;
+
+  int finalAngle = baseAngle;
+  int vueltas  = baseAngle / 180;
+
+  if(baseAngle > 180){
+      if(vueltas % 2 == 0){
+        finalAngle = (abs(baseAngle) % 180);
+      }else{
+        finalAngle = -180 + (abs(baseAngle) % 180);
+      }
+  }else if(baseAngle < -180){
+    if(vueltas % 2 == 0){
+      finalAngle = -1*(abs(baseAngle) % 180);  
+    }else{
+      finalAngle = 180 - (abs(baseAngle)%180);
+    }
+  }
+  return finalAngle;
 }
 void DriveTrain::turn(double input){
     setRightMotors(-input);
@@ -93,23 +158,32 @@ void DriveTrain::turn(double input){
 
 }
 void DriveTrain::turnToAngle(int angle){
+    update();
+    int mod = abs(angle) % 180;
+
+    if(angle > 180){
+      angle = -180 + mod; 
+    }else if(angle < -180){
+      angle = 180 - mod; 
+    }
     int error = angle - getYaw();
     while(error != 0){
       update();
-      Serial.println(error);
       error = angle - getYaw();
+
       double mul = (error / 180.0) * 10.0;
       if(mul > 1.0){
         mul = 1.0;
       }else if(mul < -1.0){
         mul = -1.0;
-      }else if(mul < .15 && mul > 0.0){
-        mul  = .15;
-      }else if(mul > -.15 && mul < 0.0){
-        mul = -.15;
+      }else if(mul <= .25 && mul >= 0.0){
+        mul  = .25;
+      }else if(mul >= -.25 && mul <= 0.0){
+        mul = -.25;
       }
       turn(mul);
     }
     turn(0);
 }
+
 
